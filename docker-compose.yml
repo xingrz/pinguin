@@ -9,3 +9,25 @@ services:
       - './pinguin.dev.yaml:/etc/pinguin/pinguin.yaml'
     ports:
       - '3000:3000'
+  agent-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: agent
+    volumes:
+      - './packages/api/dist/main.d.ts:/app/packages/api/dist/main.d.ts'
+      - './packages/agent/src:/app/packages/agent/src'
+    environment:
+      - NODE_ID=agent-1
+      - API_SERVER=http://api:3000
+  agent-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: agent
+    volumes:
+      - './packages/api/dist/main.d.ts:/app/packages/api/dist/main.d.ts'
+      - './packages/agent/src:/app/packages/agent/src'
+    environment:
+      - NODE_ID=agent-2
+      - API_SERVER=http://api:3000

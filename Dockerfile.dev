@@ -1,18 +1,33 @@
 # syntax=docker/dockerfile:1
 
-# target: api
+# target: common
 
-FROM node:22-bookworm AS api
+FROM node:22-bookworm AS common
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 COPY packages/api/package.json ./packages/api/
+COPY packages/agent/package.json ./packages/agent/
 
-RUN npm -w @pinguin/api ci
+RUN npm ci
+
+# target: api
+
+FROM common AS api
 
 COPY packages/api/rollup.config.mjs packages/api/tsconfig.json ./packages/api/
 
 EXPOSE 3000
 
 CMD [ "npm", "-w", "@pinguin/api", "run", "dev" ]
+
+# target: agent
+
+FROM common AS agent
+
+COPY packages/agent/rollup.config.mjs packages/agent/tsconfig.json ./packages/agent/
+
+EXPOSE 3000
+
+CMD [ "npm", "-w", "@pinguin/agent", "run", "dev" ]

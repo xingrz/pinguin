@@ -1,0 +1,25 @@
+{
+  "name": "@pinguin/agent",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "build": "rollup -c && tsc-alias",
+    "dev": "nodemon -w src -e ts,ejs, -x rollup -c --environment RUN"
+  },
+  "dependencies": {
+    "got": "^14.4.5"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-run": "^3.1.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^22.10.2",
+    "nodemon": "^3.1.7",
+    "rollup": "^4.28.1",
+    "typescript": "^5.7.2"
+  }
+}
