@@ -10,3 +10,7 @@ const api = got.extend({
 export async function getConfig(): Promise<API.Config> {
   return await api.get('config').json();
 }
+
+export async function report(report: API.PingReport): Promise<void> {
+  await api.post('ping', { json: report });
+}
