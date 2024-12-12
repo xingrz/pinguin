@@ -14,4 +14,21 @@ export namespace API {
     interval?: string | number;
     count?: number;
   };
+
+  export type Ping = number | null;
+
+  export type PingReport = {
+    src: string;
+    dst: string;
+    ping: Ping;
+  };
+
+  export type PingMatrix = {
+    [src: string]: {
+      [dst: string]: {
+        ping: Ping;
+        updatedAt: string;
+      };
+    };
+  };
 }
