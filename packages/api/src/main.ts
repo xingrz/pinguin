@@ -8,3 +8,5 @@ const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
 await app.listen(PORT);
 console.log(`Server up with port: ${PORT}, env: ${ENV}`);
+
+export * from '@/api/api.typing';

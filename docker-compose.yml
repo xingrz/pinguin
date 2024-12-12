@@ -6,5 +6,6 @@ services:
       target: api
     volumes:
       - './packages/api/src:/app/packages/api/src'
+      - './pinguin.dev.yaml:/etc/pinguin/pinguin.yaml'
     ports:
       - '3000:3000'

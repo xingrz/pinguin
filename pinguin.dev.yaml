@@ -1,0 +1,15 @@
+nodes:
+  - id: agent-1
+    address: agent-1
+  - id: agent-2
+    address: agent-2
+  - id: baidu
+    address: www.baidu.com
+    passive: true
+  - id: google
+    address: www.google.com
+    passive: true
+
+agent:
+  interval: 1m
+  count: 3
