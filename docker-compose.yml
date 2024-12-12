@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: api
+    volumes:
+      - './packages/api/src:/app/packages/api/src'
+    ports:
+      - '3000:3000'

@@ -1,0 +1,30 @@
+{
+  "name": "@pinguin/api",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "build": "rollup -c && tsc-alias",
+    "dev": "nodemon -w src -e ts,ejs, -x rollup -c --environment RUN"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/core": "^10.4.15",
+    "@nestjs/platform-express": "^10.4.15"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-run": "^3.1.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@tsconfig/node22": "^22.0.0",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "nodemon": "^3.1.7",
+    "rollup": "^4.28.1",
+    "rollup-plugin-dts": "^6.1.1",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.2"
+  }
+}
