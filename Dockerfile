@@ -9,6 +9,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/api/package.json ./packages/api/
 COPY packages/agent/package.json ./packages/agent/
+COPY packages/dashboard/package.json ./packages/dashboard/
 
 RUN npm ci
 
@@ -19,6 +20,16 @@ FROM common AS api-builder
 COPY packages/api ./packages/api
 
 RUN npm -w @pinguin/api run build
+
+# target: dashboard (builder)
+
+FROM common AS dashboard-builder
+
+COPY packages/dashboard ./packages/dashboard
+
+COPY --link --from=api-builder /app/packages/api/dist/main.d.ts ./packages/api/dist/
+
+RUN npm -w @pinguin/dashboard run build
 
 # target: api (runtime)
 
@@ -37,6 +48,7 @@ rm -rf /root/.npm
 EOF
 
 COPY --link --from=api-builder /app/packages/api/dist/main.js ./packages/api/dist/
+COPY --link --from=dashboard-builder /app/packages/dashboard/dist ./packages/dashboard/dist
 
 ENV NODE_ENV=production \
     PORT=80
