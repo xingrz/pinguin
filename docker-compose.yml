@@ -7,8 +7,20 @@ services:
     volumes:
       - './packages/api/src:/app/packages/api/src'
       - './pinguin.dev.yaml:/etc/pinguin/pinguin.yaml'
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: dashboard
+    volumes:
+      - './packages/dashboard/src:/app/packages/dashboard/src'
+      - './packages/dashboard/index.html:/app/packages/dashboard/index.html'
+  proxy:
+    image: nginx:stable-alpine
+    volumes:
+      - './nginx.conf:/etc/nginx/conf.d/default.conf'
     ports:
-      - '3000:3000'
+      - '8080:8080'
   agent-1:
     build:
       context: .

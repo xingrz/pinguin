@@ -9,6 +9,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY packages/api/package.json ./packages/api/
 COPY packages/agent/package.json ./packages/agent/
+COPY packages/dashboard/package.json ./packages/dashboard/
 
 RUN npm ci
 
@@ -39,3 +40,13 @@ COPY packages/agent/rollup.config.mjs packages/agent/tsconfig.json ./packages/ag
 EXPOSE 3000
 
 CMD [ "npm", "-w", "@pinguin/agent", "run", "dev" ]
+
+# target: dashboard
+
+FROM common AS dashboard
+
+COPY packages/dashboard/tsconfig.json packages/dashboard/vite.config.ts ./packages/dashboard/
+
+EXPOSE 8080
+
+CMD [ "npm", "-w", "@pinguin/dashboard", "run", "dev" ]
