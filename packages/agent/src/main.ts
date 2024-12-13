@@ -13,6 +13,10 @@ async function run() {
     const count = config.agent?.count ?? DEFAULT_COUNT;
 
     for (const node of config.nodes) {
+      if (node.id === NODE_ID) {
+        continue;
+      }
+
       const response = await ping.promise.probe(node.address, {
         extra: [
           `-c ${count}`,
