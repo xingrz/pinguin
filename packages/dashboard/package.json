@@ -12,10 +12,12 @@
     "ant-design-vue": "^4.2.6",
     "color": "^4.2.3",
     "ky": "^1.7.3",
+    "luxon": "^3.5.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@types/color": "^4.2.0",
+    "@types/luxon": "^3.4.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "sass": "^1.83.0",

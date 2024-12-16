@@ -7,12 +7,14 @@ import { computed, ref } from 'vue';
 import { theme } from 'ant-design-vue';
 import { Heatmap } from '@antv/g2plot';
 import Color from 'color';
+import { DateTime } from 'luxon';
 import type { API } from '@pinguin/api';
 
 import { useRegularyInvoke } from '@/composables/useRegularlyInvoke';
 import { usePlot } from '@/composables/usePlot';
 
 import { getConfig, getPings } from '@/api';
+import { parseDuration } from '@/utils';
 
 const REFRESH_INTERVAL = 10 * 1000;
 
@@ -29,19 +31,45 @@ const sequence = computed(() => {
     src: string;
     dst: string;
     ping: API.Ping | undefined;
-    updatedAt: Date | undefined;
+    updatedAt: DateTime | undefined;
+    status: 'ok' | 'outdated' | 'fail';
   }[] = [];
 
-  for (const { id: src, passive } of config.value?.nodes ?? []) {
+  if (!config.value || !matrix.value) {
+    return data;
+  }
+
+  const pintInterval = parseDuration(config.value.agent?.interval ?? '1m');
+
+  for (const { id: src, passive } of config.value.nodes) {
     if (passive) {
       continue;
     }
-    for (const { id: dst } of config.value?.nodes ?? []) {
-      const report = matrix.value?.[src]?.[dst];
+
+    for (const { id: dst } of config.value.nodes) {
+      const report = matrix.value[src]?.[dst];
+
+      const updatedAt = report ? DateTime.fromISO(report.updatedAt) : undefined;
+      const outdated = updatedAt
+        ? updatedAt.diffNow('minutes').as('milliseconds') < -pintInterval * 2
+        : false;
+
+      const status = (() => {
+        if (outdated) {
+          return 'outdated';
+        } else if (report?.ping === null) {
+          return 'fail';
+        } else {
+          return 'ok';
+        }
+      })();
+
       data.push({
-        src, dst,
-        ping: report?.ping ?? undefined,
-        updatedAt: report ? new Date(report.updatedAt) : undefined,
+        src,
+        dst,
+        ping: status == 'ok' ? report?.ping : null,
+        updatedAt,
+        status,
       });
     }
   }
@@ -77,10 +105,12 @@ const { el: matrixEl } = usePlot(sequence, (el, data) => new Heatmap(el, {
       fill: '#000000',
       fontFamily: 'monospace',
     },
-    formatter({ ping }) {
+    formatter({ ping, status }) {
       if (ping === undefined) {
         return '/';
-      } else if (ping === null) {
+      } else if (status == 'outdated') {
+        return 'OUTDATED';
+      } else if (status == 'fail') {
         return 'FAIL';
       } else {
         return String(ping);
